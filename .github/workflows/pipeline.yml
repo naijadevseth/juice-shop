@@ -24,8 +24,11 @@ jobs:
       - name: Remove old lockfiles
         run: rm -f package-lock.json frontend/package-lock.json
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install root dependencies (skip automatic build)
+        run: npm install --ignore-scripts
 
-      - name: Build frontend
-        run: npm run build:frontend
+      - name: Install frontend dependencies
+        run: cd frontend && npm install
+
+      - name: Build frontend (skip broken sbom step)
+        run: cd frontend && npx ng build --configuration production
