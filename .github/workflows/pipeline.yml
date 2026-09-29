@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Update npm to latest
+        run: npm install -g npm@latest
+
       - name: Remove old lockfiles
         run: rm -f package-lock.json frontend/package-lock.json
 
