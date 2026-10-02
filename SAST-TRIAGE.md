@@ -28,6 +28,7 @@
 ## Actions Taken
 - Created `.semgrepignore` to exclude confirmed intentional/out-of-scope paths (app vulnerabilities, codefixes, IaC demos, test fixtures, upstream workflows) from future blocking scans.
 - Left `.github/workflows/pipeline.yml` fully in scope — any future finding there will still fail the pipeline, since it's code we actually own and should keep hardened.
+- Expanded .semgrepignore after second scan run revealed additional test fixtures and a vendored third-party library (dat.gui.min.js) not caught by the initial, narrower file list.
 
 ## Lessons / Notes
 - Not every SAST finding should be suppressed — the correct response depends on whether the finding is "intentional by design," "not our code," or "a genuine gap we should fix." This log makes that distinction explicit for each category, which mirrors how a real SOC/AppSec analyst would reason through scanner output on a known-vulnerable application.
