@@ -34,7 +34,7 @@ jobs:
         run: cd frontend && npx ng build --configuration production
 
       - name: Scan for secrets
-                uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
