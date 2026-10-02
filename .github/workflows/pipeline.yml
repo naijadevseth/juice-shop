@@ -39,6 +39,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: SAST scan with Semgrep
-        uses: semgrep/semgrep-action@v1
-        with:
-          config: p/default
+        run: |
+          pip install semgrep
+          semgrep scan --config=p/default --error
