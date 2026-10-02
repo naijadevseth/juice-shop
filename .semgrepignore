@@ -18,6 +18,9 @@ infrastructure/terraform/
 # Test fixtures and smoke-test files (dummy tokens/secrets, non-production Dockerfile)
 test/
 
+# Frontend test spec files (dummy JWT tokens for component testing)
+frontend/src/app/**/*.spec.ts
+
 # Third-party vendored libraries, not our code
 frontend/src/assets/private/
 
