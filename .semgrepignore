@@ -1,0 +1,32 @@
+# Core intentional Juice Shop vulnerabilities — documented in SAST-TRIAGE.md
+routes/
+lib/insecurity.ts
+lib/antiCheat.ts
+lib/codingChallenges.ts
+server.ts
+views/
+frontend/src/hacking-instructor/
+
+# Intentional teaching/codefix snippets
+data/static/codefixes/
+data/static/users.yml
+
+# Intentional IaC vulnerability demos
+terraform/
+infrastructure/terraform/
+
+# Test fixtures (dummy tokens)
+frontend/src/app/app.guard.spec.ts
+frontend/src/app/last-login-ip/last-login-ip.component.spec.ts
+
+# Upstream OWASP Juice Shop CI files — not authored as part of this project
+.github/workflows/ci.yml
+.github/workflows/codeql-analysis.yml
+.github/workflows/image_actions.yml
+.github/workflows/update-challenges-ebook.yml
+.github/workflows/update-challenges-www-legacy.yml
+.github/workflows/update-challenges-www.yml
+
+# Minor, low-priority, not actionable within project scope
+.npmrc
+frontend/.npmrc
