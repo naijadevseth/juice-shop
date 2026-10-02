@@ -1,0 +1,18 @@
+title = "Gitleaks config for juice-shop DevSecOps project"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Confirmed false positives: test fixtures, seed data, and OWASP Juice Shop's intentional vulnerable code"
+paths = [
+  '''test/.*''',
+  '''.*\.spec\.ts''',
+  '''.*\.test\.ts''',
+  '''data/static/users\.yml''',
+  '''lib/insecurity\.ts''',
+  '''routes/login\.ts''',
+  '''frontend/src/app/faucet/faucet\.component\.ts''',
+  '''infrastructure/terraform/networking\.tf''',
+  '''terraform/networking\.tf''',
+]
