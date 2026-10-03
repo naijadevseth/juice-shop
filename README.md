@@ -1,3 +1,43 @@
+# DevSecOps Pipeline — Built on OWASP Juice Shop
+
+A DevSecOps pipeline built on top of OWASP Juice Shop (an intentionally vulnerable web application), demonstrating automated security scanning integrated into CI/CD with documented analyst-style triage of real findings.
+
+## What this project adds
+
+This fork wraps Juice Shop in a security-automated GitHub Actions pipeline that runs on every push:
+
+1. **Build automation** — installs dependencies and builds the frontend
+2. **Secrets scanning** ([Gitleaks](https://github.com/gitleaks/gitleaks)) — detects hardcoded credentials, API keys, and tokens
+3. **Static Application Security Testing** ([Semgrep](https://semgrep.dev/)) — detects insecure code patterns (SQL injection, eval() misuse, path traversal, hardcoded secrets, etc.)
+4. **Dependency vulnerability scanning** ([Trivy](https://trivy.dev/)) — checks installed packages against known CVE databases
+
+Every security tool's output was reviewed and triaged, not just run and ignored. See the triage documents below for the full reasoning behind every decision.
+
+## Pipeline
+
+See [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml). All third-party GitHub Actions are pinned to full commit SHAs (not mutable version tags) as a supply-chain hardening measure — a decision validated when the Trivy Action project itself suffered a real tag-hijacking incident during this project's development.
+
+## Triage Documentation
+
+| Document | Covers |
+|---|---|
+| [`SECURITY-TRIAGE.md`](SECURITY-TRIAGE.md) | Gitleaks secrets scan — 68 findings reviewed, allowlisted via `.gitleaks.toml` |
+| [`SAST-TRIAGE.md`](SAST-TRIAGE.md) | Semgrep SAST scan — 71 findings reviewed, allowlisted via `.semgrepignore`, one real fix applied (pinned Action SHAs) |
+| [`TRIVY-TRIAGE.md`](TRIVY-TRIAGE.md) | Trivy dependency scan — 56 CVEs reviewed against Juice Shop's intentional "Vulnerable Components" challenge design |
+
+## Key design decisions
+
+- **Each scanner has a distinct responsibility.** Where tools overlapped (e.g. Trivy's built-in secret scanner duplicating Gitleaks), the pipeline was tuned to avoid redundant alerts.
+- **Findings were classified, not blanket-suppressed.** Every allowlisted finding has a documented reason — test fixtures, intentional teaching vulnerabilities, or genuinely out-of-scope upstream files.
+- **Real issues were fixed, not hidden.** When Semgrep flagged mutable GitHub Action tags as a genuine supply-chain risk, the fix was to pin every action to an exact commit SHA — not to ignore the finding.
+- **Scan coverage was verified, not assumed.** An early Trivy run reported "0 vulnerabilities" — investigation revealed it had scanned 0 files due to a missing lockfile, not that the dependencies were clean. Documented as a lesson in `TRIVY-TRIAGE.md`.
+
+---
+
+## About OWASP Juice Shop (original project)
+
+*The original Juice Shop README continues below.*
+
 # ![Juice Shop Logo](https://raw.githubusercontent.com/juice-shop/juice-shop/master/frontend/src/assets/public/images/JuiceShop_Logo_100px.png) OWASP Juice Shop
 
 [![OWASP Flagship](https://img.shields.io/badge/owasp-flagship%20project-48A646.svg)](https://owasp.org/projects/#sec-flagships)
