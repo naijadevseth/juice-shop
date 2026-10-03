@@ -29,3 +29,27 @@ An initial run of the narrowed (vuln-only) Trivy scan reported "0 vulnerabilitie
 **Fix:** added a dedicated pipeline step to generate lockfiles specifically for scanning purposes (`npm install --package-lock-only --package-lock=true`), run just before the Trivy step. This overrides the `.npmrc` setting only for that one command, without changing how the application installs normally elsewhere in the pipeline.
 
 **Why this matters / lesson learned:** a scan that reports "clean" isn't automatically trustworthy — it's important to confirm the scan actually had something to scan in the first place. A silently empty scan is a more dangerous failure mode than a scan that clearly errors out, because it looks identical to a genuinely clean result. This is a real example of the kind of verification a SOC/DevSecOps analyst should build the habit of doing: checking scan *coverage*, not just scan *output*.
+
+## Results — Full Dependency Scan (after lockfile fix)
+
+With lockfiles correctly generated, Trivy identified real findings:
+
+| Target | Total | Critical | High |
+|---|---|---|---|
+| package-lock.json (root) | 51 | 9 | 42 |
+| frontend/package-lock.json | 5 | 0 | 5 |
+
+## Triage
+
+**Verdict: Accepted risk — intentional, by design.**
+
+Nearly every flagged library (lodash 2.4.2, jsonwebtoken 0.1.0/0.4.0, crypto-js 3.3.0, tar 6.2.1, multer 1.4.5, express-jwt 0.1.3, ws 7.4.6, socket.io-parser 4.0.5, moment 2.0.0, marsdb 0.6.11, decompress 4.2.1) is deliberately pinned to an old, known-vulnerable version. This isn't accidental — OWASP Juice Shop has a specific built-in challenge category ("Vulnerable Components," mapping to OWASP Top 10 A06) that exists specifically to teach identification and exploitation of outdated dependencies. Upgrading these packages would silently break the app's own teaching challenges.
+
+**Reasoning applied:**
+- Checked whether the flagged libraries correspond to known Juice Shop challenge dependencies rather than incidental transitive packages — they do, consistently across the list (jsonwebtoken, lodash, multer, crypto-js are all well-documented Juice Shop "vulnerable component" teaching targets).
+- No action taken to patch/upgrade these dependencies, since doing so would remove intentional training content from the forked project — this mirrors the same reasoning already applied to the Semgrep SAST findings (routes/, lib/insecurity.ts, etc.).
+- This scan still has real value even with everything "accepted": it demonstrates the pipeline can correctly detect and enumerate real, current CVEs against actual installed versions — which is the whole point of running it.
+
+## Actions Taken
+- No dependency upgrades applied (see reasoning above).
+- Findings documented here as the final artifact of the dependency-scanning stage, completing the project's three-pillar security pipeline (secrets, SAST, dependencies).
