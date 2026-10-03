@@ -43,6 +43,11 @@ jobs:
           pip install semgrep
           semgrep scan --config=p/default --error
 
+      - name: Generate lockfiles for dependency scan
+        run: |
+          npm install --package-lock-only --package-lock=true
+          cd frontend && npm install --package-lock-only --package-lock=true
+
       - name: Dependency scan with Trivy
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
