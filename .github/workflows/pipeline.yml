@@ -49,3 +49,4 @@ jobs:
           scan-type: fs
           scan-ref: .
           severity: CRITICAL,HIGH
+          scanners: vuln
